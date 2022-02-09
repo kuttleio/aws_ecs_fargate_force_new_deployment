@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 module "lambda_function_list_services" {
     source                  = "terraform-aws-modules/lambda/aws"
     version                 = "2.16.0"
@@ -23,7 +25,7 @@ module "lambda_function_list_services" {
     allowed_triggers = {
         OnceAWeek = {
             principal  = "events.amazonaws.com"
-            source_arn = aws_cloudwatch_event_rule.run_every_week.arn
+            source_arn = aws_cloudwatch_event_rule.list_services_schedule_rule.arn
         }
     }
 
@@ -76,8 +78,8 @@ resource "aws_iam_policy" "policy_for_list_services_lambda" {
     })
 }
 
-resource "aws_cloudwatch_event_rule" "run_every_week" {
-    name                = "run-every-week"
-    description         = "Fires Lambda every Sunday morning"
-    schedule_expression = "cron(0 7 ? * SUN *)"
+resource "aws_cloudwatch_event_rule" "list_services_schedule_rule" {
+    name                = var.list_rule.name
+    description         = var.list_rule.description
+    schedule_expression = var.list_rule.expression
 }
