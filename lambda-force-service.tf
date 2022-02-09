@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 module "lambda_function_ecs_fargate_force_new_deployment" {
     source                  = "terraform-aws-modules/lambda/aws"
     version                 = "2.16.0"
@@ -23,7 +25,7 @@ module "lambda_function_ecs_fargate_force_new_deployment" {
     allowed_triggers = {
         Every15Min = {
             principal  = "events.amazonaws.com"
-            source_arn = aws_cloudwatch_event_rule.run_every_10min.arn
+            source_arn = aws_cloudwatch_event_rule.action_schedule_rule.arn
         }
     }
 
@@ -70,8 +72,8 @@ resource "aws_iam_policy" "policy_for_ecs_fargate_force_new_deployment_lambda" {
     })
 }
 
-resource "aws_cloudwatch_event_rule" "run_every_10min" {
-    name                = "run-every-10-min"
-    description         = "Fires Lambda every 10 minutes but only Sundays"
-    schedule_expression = "cron(0/10 * ? * SUN *)"
+resource "aws_cloudwatch_event_rule" "action_schedule_rule" {
+    name                = var.action_rule.name
+    description         = var.action_rule.description
+    schedule_expression = var.action_rule.expression
 }
