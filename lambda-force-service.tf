@@ -1,5 +1,3 @@
-data "aws_region" "current" {}
-
 module "lambda_function_ecs_fargate_force_new_deployment" {
     source                  = "terraform-aws-modules/lambda/aws"
     version                 = "2.16.0"
