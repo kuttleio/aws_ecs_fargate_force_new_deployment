@@ -41,7 +41,7 @@ def lambda_handler(event, context):
     message = json.loads(message['Body'])
     
     ecs_cluster = message['ecs_cluster']
-    ecs_service = message['ecs_fargate_service']
+    ecs_service = message['ecs_service']
     
     print('\nTriggering Force New Deployment\n')
     

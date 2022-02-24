@@ -3,8 +3,8 @@ data "aws_region" "current" {}
 module "lambda_function_list_services" {
     source                  = "terraform-aws-modules/lambda/aws"
     version                 = "2.16.0"
-    function_name           = "${var.name_prefix}-ECS-Fargate-List-Services"
-    description             = "List ECS Fargate Services"
+    function_name           = "${var.name_prefix}-ECS-List-Services"
+    description             = "List ECS Services"
     handler                 = "list-services.lambda_handler"
     runtime                 = "python3.9"
     source_path             = "${path.module}/src/list-services.py"
@@ -19,7 +19,7 @@ module "lambda_function_list_services" {
 
     environment_variables = {
         ECS_CLUSTER     = var.ecs_cluster
-        SQS_URL         = aws_sqs_queue.fargate_force_update.url
+        SQS_URL         = aws_sqs_queue.force_update.url
     }
 
     allowed_triggers = {
@@ -31,17 +31,17 @@ module "lambda_function_list_services" {
 
     tags = merge(var.standard_tags,
     {
-        Name    = "List ECS Fargate Services"
+        Name    = "List ECS Services"
         Comment = "Managed by Terraform"
     })
 }
 
-resource "aws_sqs_queue" "fargate_force_update" {
-    name = "${var.name_prefix}-fargate-force-update"
+resource "aws_sqs_queue" "force_update" {
+    name = "${var.name_prefix}-force-update"
 
     tags = merge(var.standard_tags,
     {
-        Name    = "List ECS Fargate Services"
+        Name    = "List ECS Services"
         Comment = "Managed by Terraform"
     })
 }
@@ -72,7 +72,7 @@ resource "aws_iam_policy" "policy_for_list_services_lambda" {
                     "sqs:SendMessage",
                 ]
                 Effect   = "Allow"
-                Resource = aws_sqs_queue.fargate_force_update.arn
+                Resource = aws_sqs_queue.force_update.arn
             },
         ]
     })

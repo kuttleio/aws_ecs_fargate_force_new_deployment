@@ -26,9 +26,9 @@ def lambda_handler(event, context):
         maxResults=100,
     )
 
-    print('\n --- Fargate Services --- ')
+    print('\n --- ECS Services --- ')
     for service in services.get('serviceArns'):
         echo = service[43:] + "\n--> Pushed to SQS"
-        msg = json.dumps({'ecs_cluster': ecs_cluster, 'ecs_fargate_service': service})
+        msg = json.dumps({'ecs_cluster': ecs_cluster, 'ecs_service': service})
         push_to_sqs(msg)
         print(echo)
