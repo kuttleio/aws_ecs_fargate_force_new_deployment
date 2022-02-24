@@ -1,8 +1,8 @@
-module "lambda_function_ecs_fargate_force_new_deployment" {
+module "lambda_function_ecs_force_new_deployment" {
     source                  = "terraform-aws-modules/lambda/aws"
     version                 = "2.16.0"
-    function_name           = "${var.name_prefix}-ECS-Fargate-Force-New-Deployment"
-    description             = "ECS Fargate Force New Deployment"
+    function_name           = "${var.name_prefix}-ECS-Force-New-Deployment"
+    description             = "ECS Force New Deployment"
     handler                 = "force-service.lambda_handler"
     runtime                 = "python3.9"
     source_path             = "${path.module}/src/force-service.py"
@@ -10,14 +10,14 @@ module "lambda_function_ecs_fargate_force_new_deployment" {
     memory_size             = 256
     maximum_retry_attempts  = 2
     attach_policy           = true
-    policy                  = aws_iam_policy.policy_for_ecs_fargate_force_new_deployment_lambda.arn
+    policy                  = aws_iam_policy.policy_for_ecs_force_new_deployment_lambda.arn
 
     ## https://github.com/terraform-aws-modules/terraform-aws-lambda/issues/36
     create_current_version_allowed_triggers = false
 
     environment_variables = {
         ECS_CLUSTER     = var.ecs_cluster
-        SQS_URL         = aws_sqs_queue.fargate_force_update.url
+        SQS_URL         = aws_sqs_queue.force_update.url
     }
 
     allowed_triggers = {
@@ -29,14 +29,14 @@ module "lambda_function_ecs_fargate_force_new_deployment" {
 
     tags = merge(var.standard_tags,
     {
-        Name    = "Force New Deployment - Fargate"
+        Name    = "Force New Deployment"
         Comment = "Managed by Terraform"
     })
 
 }
 
-resource "aws_iam_policy" "policy_for_ecs_fargate_force_new_deployment_lambda" {
-    name        = "${var.name_prefix}-ECS-Fargate-Force-New-Deployment-Lambda"
+resource "aws_iam_policy" "policy_for_ecs_force_new_deployment_lambda" {
+    name        = "${var.name_prefix}-ECS-Force-New-Deployment-Lambda"
     path        = "/"
     description = "Allow to list ECS Services & SQS"
 
@@ -64,7 +64,7 @@ resource "aws_iam_policy" "policy_for_ecs_fargate_force_new_deployment_lambda" {
                     "sqs:DeleteMessage",
                 ]
                 Effect   = "Allow"
-                Resource = aws_sqs_queue.fargate_force_update.arn
+                Resource = aws_sqs_queue.force_update.arn
             },
         ]
     })
