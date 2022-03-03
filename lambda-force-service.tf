@@ -10,6 +10,7 @@ module "lambda_function_ecs_force_new_deployment" {
     memory_size             = 256
     maximum_retry_attempts  = 2
     attach_policy           = true
+    ignore_source_code_hash = true
     policy                  = aws_iam_policy.policy_for_ecs_force_new_deployment_lambda.arn
 
     ## https://github.com/terraform-aws-modules/terraform-aws-lambda/issues/36

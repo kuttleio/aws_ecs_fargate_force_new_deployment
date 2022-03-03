@@ -12,6 +12,7 @@ module "lambda_function_list_services" {
     memory_size             = 256
     maximum_retry_attempts  = 2
     attach_policy           = true
+    ignore_source_code_hash = true
     policy                  = aws_iam_policy.policy_for_list_services_lambda.arn
 
     ## https://github.com/terraform-aws-modules/terraform-aws-lambda/issues/36
