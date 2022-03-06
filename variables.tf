@@ -1,15 +1,15 @@
-variable "account" {}
-variable "name_prefix" {
+variable account {}
+variable name_prefix {
     type = string
 }
-variable "standard_tags" {
+variable standard_tags {
     type = map(string)
 }
-variable "ecs_cluster" {
+variable ecs_cluster {
     type = string
 }
 
-variable "list_rule" {
+variable list_rule {
     description = "Schedule rule for listing service"
     default     = {
         name            = "run-every-week"
@@ -18,7 +18,7 @@ variable "list_rule" {
     }   
 }
 
-variable "action_rule" {
+variable action_rule {
     description = "Schedule actions for the listed services"
     default     = {
         name            = "run-every-10-min"
