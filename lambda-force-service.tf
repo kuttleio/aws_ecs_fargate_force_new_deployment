@@ -1,16 +1,16 @@
-module "lambda_function_ecs_force_new_deployment" {
+module force_service {
     source                  = "terraform-aws-modules/lambda/aws"
-    version                 = "2.16.0"
+    version                 = "2.34.1"
     function_name           = "${var.name_prefix}-ECS-Force-New-Deployment"
     description             = "ECS Force New Deployment"
     handler                 = "force-service.lambda_handler"
     runtime                 = "python3.9"
-    source_path             = "${path.module}/src/force-service.py"
     timeout                 = 30
     memory_size             = 256
     maximum_retry_attempts  = 2
     attach_policy           = true
-    ignore_source_code_hash = true
+    create_package          = false
+    local_existing_package  = "${path.module}/force-service.zip"    
     policy                  = aws_iam_policy.policy_for_ecs_force_new_deployment_lambda.arn
 
     ## https://github.com/terraform-aws-modules/terraform-aws-lambda/issues/36
@@ -36,7 +36,7 @@ module "lambda_function_ecs_force_new_deployment" {
 
 }
 
-resource "aws_iam_policy" "policy_for_ecs_force_new_deployment_lambda" {
+resource aws_iam_policy policy_for_ecs_force_new_deployment_lambda {
     name        = "${var.name_prefix}-ECS-Force-New-Deployment-Lambda"
     path        = "/"
     description = "Allow to list ECS Services & SQS"
@@ -71,7 +71,7 @@ resource "aws_iam_policy" "policy_for_ecs_force_new_deployment_lambda" {
     })
 }
 
-resource "aws_cloudwatch_event_rule" "action_schedule_rule" {
+resource aws_cloudwatch_event_rule action_schedule_rule {
     name                = var.action_rule.name
     description         = var.action_rule.description
     schedule_expression = var.action_rule.expression
