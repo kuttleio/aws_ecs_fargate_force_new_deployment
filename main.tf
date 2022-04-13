@@ -47,3 +47,9 @@ resource aws_iam_policy policy {
         ]
     })
 }
+
+resource aws_cloudwatch_event_rule schedule {
+    name                = var.schedule.name
+    description         = var.schedule.description
+    schedule_expression = var.schedule.expression
+}

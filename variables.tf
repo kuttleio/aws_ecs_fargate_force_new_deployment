@@ -8,3 +8,12 @@ variable standard_tags {
 variable ecs_cluster {
     type = string
 }
+
+variable schedule {
+    description = "Schedule rule for Lambda"
+    default     = {
+        name            = "run-every-week"
+        description     = "Fires Lambda every Sunday morning at 7 UTC"
+        expression      = "cron(0 7 ? * SUN *)"
+    }   
+}
