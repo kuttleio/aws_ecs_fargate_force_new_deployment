@@ -69,7 +69,7 @@ resource aws_cloudwatch_event_target this {
 resource aws_lambda_permission allow_cloudwatch_to_invoke_lambda {
     statement_id = "AllowExecutionFromCloudWatch"
     action = "lambda:InvokeFunction"
-    function_name = module.lambda.lambda_function_id
+    function_name = module.lambda.lambda_function_name
     principal = "events.amazonaws.com"
     source_arn = aws_cloudwatch_event_rule.schedule.arn
 }
