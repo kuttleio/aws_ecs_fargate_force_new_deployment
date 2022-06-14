@@ -55,9 +55,10 @@ resource aws_iam_policy policy {
 # }
 
 module eventbridge {
-    source  = "terraform-aws-modules/eventbridge/aws"
-    version = "~> 1.0"
-    create_bus = false
+    source      = "terraform-aws-modules/eventbridge/aws"
+    version     = "~> 1.0"
+    create_bus  = false
+    bus_name    = var.schedule.name
 
     rules = {
         crons = {
@@ -75,4 +76,6 @@ module eventbridge {
             }
         ]
     }
+
+    tags = { Name = var.schedule.name }
 }
