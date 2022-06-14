@@ -23,7 +23,7 @@ module lambda {
     allowed_triggers = {
         OneRule = {
             principal  = "events.amazonaws.com"
-            source_arn = aws_cloudwatch_event_rule.schedule.name
+            source_arn = aws_cloudwatch_event_rule.schedule.arn
         }
     }
 }
