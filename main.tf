@@ -70,7 +70,7 @@ module eventbridge {
         crons = [
             {
                 name  = var.schedule.name
-                arn   = module.lambda.lambda_function_name
+                arn   = module.lambda.lambda_function_arn
                 input = jsonencode({"job": "cron-by-rate"})
             }
         ]
