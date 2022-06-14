@@ -2,7 +2,7 @@ data aws_region current {}
 
 module lambda {
     source                  = "terraform-aws-modules/lambda/aws"
-    version                 = "2.34.1"
+    version                 = "~> 2.0"
     function_name           = "${var.name_prefix}-ECS-Force-New-Deployment"
     description             = "List ECS Services"
     handler                 = "lambda.lambda_handler"
@@ -19,6 +19,13 @@ module lambda {
     environment_variables = {
         ECS_CLUSTER     = var.ecs_cluster
     }
+
+    # allowed_triggers = {
+    #     AllowExecutionFromCloudWatch = {
+    #         principal  = "events.amazonaws.com"
+    #         source_arn = aws_cloudwatch_event_rule.schedule.arn
+    #     }
+    # }
 }
 
 resource aws_iam_policy policy {
@@ -52,4 +59,17 @@ resource aws_cloudwatch_event_rule schedule {
     name                = var.schedule.name
     description         = var.schedule.description
     schedule_expression = var.schedule.expression
+}
+
+resource aws_cloudwatch_event_target this {
+    rule = aws_cloudwatch_event_rule.schedule.name
+    arn  = module.lambda.lambda_function_arn
+}
+
+resource aws_lambda_permission allow_cloudwatch_to_invoke_lambda {
+    statement_id = "AllowExecutionFromCloudWatch"
+    action = "lambda:InvokeFunction"
+    function_name = module.lambda.lambda_function_name
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.schedule.arn
 }
