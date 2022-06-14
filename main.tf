@@ -19,6 +19,13 @@ module lambda {
     environment_variables = {
         ECS_CLUSTER     = var.ecs_cluster
     }
+
+    allowed_triggers = {
+        OneRule = {
+            principal  = "events.amazonaws.com"
+            source_arn = aws_cloudwatch_event_rule.schedule.name
+        }
+    }
 }
 
 resource aws_iam_policy policy {
