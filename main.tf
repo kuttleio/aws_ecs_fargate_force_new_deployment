@@ -4,7 +4,7 @@ module lambda {
     source                  = "terraform-aws-modules/lambda/aws"
     version                 = "~> 2.0"
     function_name           = "${var.name_prefix}-ECS-Force-New-Deployment"
-    description             = "List ECS Services"
+    description             = "ECS Force New Deployment -> ${var.name_prefix}"
     handler                 = "lambda.lambda_handler"
     runtime                 = "python3.9"
     timeout                 = 30
