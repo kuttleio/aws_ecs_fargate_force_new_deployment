@@ -20,12 +20,12 @@ module lambda {
         ECS_CLUSTER     = var.ecs_cluster
     }
 
-    allowed_triggers = {
-        OneRule = {
-            principal  = "events.amazonaws.com"
-            source_arn = aws_cloudwatch_event_rule.schedule.arn
-        }
-    }
+    # allowed_triggers = {
+    #     OneRule = {
+    #         principal  = "events.amazonaws.com"
+    #         source_arn = aws_cloudwatch_event_rule.schedule.arn
+    #     }
+    # }
 }
 
 resource aws_iam_policy policy {
@@ -64,4 +64,12 @@ resource aws_cloudwatch_event_rule schedule {
 resource aws_cloudwatch_event_target this {
     rule = aws_cloudwatch_event_rule.schedule.name
     arn  = module.lambda.lambda_function_arn
+}
+
+resource aws_lambda_permission allow_cloudwatch_to_invoke_lambda {
+    statement_id = "AllowExecutionFromCloudWatch"
+    action = "lambda:InvokeFunction"
+    function_name = module.lambda.lambda_function_arn
+    principal = "events.amazonaws.com"
+    source_arn = aws_cloudwatch_event_rule.schedule.arn
 }
