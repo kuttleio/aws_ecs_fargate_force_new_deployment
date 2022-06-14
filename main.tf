@@ -2,7 +2,7 @@ data aws_region current {}
 
 module lambda {
     source                  = "terraform-aws-modules/lambda/aws"
-    version                 = "2.34.1"
+    version                 = "~> 2.0"
     function_name           = "${var.name_prefix}-ECS-Force-New-Deployment"
     description             = "List ECS Services"
     handler                 = "lambda.lambda_handler"
@@ -48,8 +48,31 @@ resource aws_iam_policy policy {
     })
 }
 
-resource aws_cloudwatch_event_rule schedule {
-    name                = var.schedule.name
-    description         = var.schedule.description
-    schedule_expression = var.schedule.expression
+# resource aws_cloudwatch_event_rule schedule {
+#     name                = var.schedule.name
+#     description         = var.schedule.description
+#     schedule_expression = var.schedule.expression
+# }
+
+module eventbridge {
+    source  = "terraform-aws-modules/eventbridge/aws"
+    version = "~> 1.0"
+    create_bus = false
+
+    rules = {
+        crons = {
+            description         = var.schedule.description
+            schedule_expression = var.schedule.expression
+        }
+    }
+
+    targets = {
+        crons = [
+            {
+                name  = var.schedule.name
+                arn   = module.lambda.lambda_function_name
+                input = jsonencode({"job": "cron-by-rate"})
+            }
+        ]
+    }
 }
