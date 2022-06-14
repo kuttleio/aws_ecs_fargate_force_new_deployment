@@ -57,7 +57,7 @@ resource aws_iam_policy policy {
 module eventbridge {
     source      = "terraform-aws-modules/eventbridge/aws"
     version     = "~> 1.0"
-    create_bus  = false
+    create_bus  = true
     bus_name    = "${var.name_prefix}-${var.schedule.name}"
 
     rules = {
