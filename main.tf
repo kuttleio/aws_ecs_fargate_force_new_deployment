@@ -48,34 +48,13 @@ resource aws_iam_policy policy {
     })
 }
 
-# resource aws_cloudwatch_event_rule schedule {
-#     name                = var.schedule.name
-#     description         = var.schedule.description
-#     schedule_expression = var.schedule.expression
-# }
+resource aws_cloudwatch_event_rule schedule {
+    name                = var.schedule.name
+    description         = var.schedule.description
+    schedule_expression = var.schedule.expression
+}
 
-module eventbridge {
-    source      = "terraform-aws-modules/eventbridge/aws"
-    version     = "~> 1.0"
-    create_bus  = false
-    bus_name    = "${var.name_prefix}-${var.schedule.name}"
-
-    rules = {
-        crons = {
-            description         = var.schedule.description
-            schedule_expression = var.schedule.expression
-        }
-    }
-
-    targets = {
-        crons = [
-            {
-                name  = "${var.name_prefix}-${var.schedule.name}"
-                arn   = module.lambda.lambda_function_arn
-                # input = jsonencode({"job": "cron-by-rate"})
-            }
-        ]
-    }
-
-    tags = { Name = "${var.name_prefix}-${var.schedule.name}" }
+resource aws_cloudwatch_event_target this {
+    rule = aws_cloudwatch_event_rule.schedule.name
+    arn  = module.lambda.lambda_function_arn
 }
