@@ -58,7 +58,7 @@ module eventbridge {
     source      = "terraform-aws-modules/eventbridge/aws"
     version     = "~> 1.0"
     create_bus  = false
-    bus_name    = var.schedule.name
+    bus_name    = "${var.name_prefix}-${var.schedule.name}"
 
     rules = {
         crons = {
@@ -70,12 +70,12 @@ module eventbridge {
     targets = {
         crons = [
             {
-                name  = var.schedule.name
+                name  = "${var.name_prefix}-${var.schedule.name}"
                 arn   = module.lambda.lambda_function_arn
                 input = jsonencode({"job": "cron-by-rate"})
             }
         ]
     }
 
-    tags = { Name = var.schedule.name }
+    tags = { Name = "${var.name_prefix}-${var.schedule.name}" }
 }
