@@ -19,13 +19,6 @@ module lambda {
     environment_variables = {
         ECS_CLUSTER     = var.ecs_cluster
     }
-
-    # allowed_triggers = {
-    #     AllowExecutionFromCloudWatch = {
-    #         principal  = "events.amazonaws.com"
-    #         source_arn = aws_cloudwatch_event_rule.schedule.arn
-    #     }
-    # }
 }
 
 resource aws_iam_policy policy {
