@@ -1,20 +1,22 @@
 data aws_region current {}
 
 module lambda {
-    source                  = "terraform-aws-modules/lambda/aws"
-    version                 = "~> 2.0"
-    function_name           = "${var.name_prefix}-ECS-Force-New-Deployment"
-    description             = "ECS Force New Deployment -> ${var.name_prefix}"
-    handler                 = "lambda.lambda_handler"
-    runtime                 = "python3.9"
-    timeout                 = 30
-    memory_size             = 256
-    maximum_retry_attempts  = 2
-    attach_policy           = true
-    create_package          = false
-    local_existing_package  = "${path.module}/lambda.zip"
-    policy                  = aws_iam_policy.policy.arn
-    tags                    = var.standard_tags
+    source  = "terraform-aws-modules/lambda/aws"
+    version = "~> 2.0"
+
+    function_name                       = "${var.name_prefix}-ECS-Force-New-Deployment"
+    description                         = "ECS Force New Deployment for ${var.name_prefix}"
+    handler                             = "lambda.lambda_handler"
+    runtime                             = "python3.9"
+    timeout                             = 30
+    memory_size                         = 256
+    maximum_retry_attempts              = 2
+    attach_policy                       = true
+    create_package                      = false
+    local_existing_package              = "${path.module}/lambda.zip"
+    policy                              = aws_iam_policy.policy.arn
+    tags                                = var.standard_tags
+    cloudwatch_logs_retention_in_days   = var.cloudwatch_logs_retention_in_days
 
     environment_variables = {
         ECS_CLUSTER     = var.ecs_cluster

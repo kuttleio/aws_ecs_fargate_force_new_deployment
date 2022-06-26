@@ -8,6 +8,10 @@ variable standard_tags {
 variable ecs_cluster {
     type = string
 }
+variable cloudwatch_logs_retention_in_days {
+    type    = number
+    default = 3
+}
 
 variable schedule {
     description = "Schedule rule for Lambda"
