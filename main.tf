@@ -16,7 +16,7 @@ module lambda {
     local_existing_package              = "${path.module}/lambda.zip"
     policy                              = aws_iam_policy.policy.arn
     tags                                = var.standard_tags
-    cloudwatch_logs_retention_in_days   = 3
+    cloudwatch_logs_retention_in_days   = var.cloudwatch_logs_retention_in_days
 
     environment_variables = {
         ECS_CLUSTER     = var.ecs_cluster
