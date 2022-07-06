@@ -50,21 +50,21 @@ resource aws_iam_policy policy {
     })
 }
 
-resource aws_cloudwatch_event_rule schedule {
-    name                = var.schedule.name
-    description         = var.schedule.description
-    schedule_expression = var.schedule.expression
-}
+# resource aws_cloudwatch_event_rule schedule {
+#     name                = var.schedule.name
+#     description         = var.schedule.description
+#     schedule_expression = var.schedule.expression
+# }
 
-resource aws_cloudwatch_event_target this {
-    rule = aws_cloudwatch_event_rule.schedule.name
-    arn  = module.lambda.lambda_function_arn
-}
+# resource aws_cloudwatch_event_target this {
+#     rule = aws_cloudwatch_event_rule.schedule.name
+#     arn  = module.lambda.lambda_function_arn
+# }
 
-resource aws_lambda_permission allow_cloudwatch_to_invoke_lambda {
-    statement_id = "AllowExecutionFromCloudWatch"
-    action = "lambda:InvokeFunction"
-    function_name = module.lambda.lambda_function_name
-    principal = "events.amazonaws.com"
-    source_arn = aws_cloudwatch_event_rule.schedule.arn
-}
+# resource aws_lambda_permission allow_cloudwatch_to_invoke_lambda {
+#     statement_id = "AllowExecutionFromCloudWatch"
+#     action = "lambda:InvokeFunction"
+#     function_name = module.lambda.lambda_function_name
+#     principal = "events.amazonaws.com"
+#     source_arn = aws_cloudwatch_event_rule.schedule.arn
+# }
