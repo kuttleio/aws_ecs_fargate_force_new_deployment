@@ -2,7 +2,7 @@ data aws_region current {}
 
 module lambda {
     source  = "terraform-aws-modules/lambda/aws"
-    version = "~> 2.0"
+    version = "~> 5.0"
 
     function_name                       = "${var.name_prefix}-ECS-Force-New-Deployment"
     description                         = "ECS Force New Deployment for ${var.name_prefix}"
